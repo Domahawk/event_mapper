@@ -13,6 +13,7 @@ import {geocode, type GeoResult, reverseGeocode} from "@/api/geocode.ts";
 import Event from '@/types/event.ts'
 import {watchDebounced} from "@vueuse/core";
 import {eventsApi} from "@/api/events.ts";
+import DateTimePicker from "@/components/DateTimePicker.vue";
 
 type LatLng = { lat: number; lng: number }
 
@@ -188,15 +189,27 @@ watchDebounced(address, async (address: string) => {
           <textarea id="desc" v-model="form.description" rows="3" class="w-full rounded-md border px-3 py-2" />
         </div>
 
+<!--        <div class="grid sm:grid-cols-2 gap-4">-->
+<!--          <div>-->
+<!--            <Label for="start">Start date</Label>-->
+<!--            <Input id="start" type="datetime-local" v-model="form.starts_at" />-->
+<!--            <p v-if="errors.starts_at" class="text-sm text-red-600 mt-1">{{ errors.starts_at }}</p>-->
+<!--          </div>-->
+<!--          <div>-->
+<!--            <Label for="end">End date</Label>-->
+<!--            <Input id="end" type="datetime-local" v-model="form.ends_at" />-->
+<!--            <p v-if="errors.ends_at" class="text-sm text-red-600 mt-1">{{ errors.ends_at }}</p>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="grid sm:grid-cols-2 gap-4">
           <div>
-            <Label for="start">Start date</Label>
-            <Input id="start" type="datetime-local" v-model="form.starts_at" />
+            <Label>Start date</Label>
+            <DateTimePicker v-model="form.starts_at" />
             <p v-if="errors.starts_at" class="text-sm text-red-600 mt-1">{{ errors.starts_at }}</p>
           </div>
           <div>
-            <Label for="end">End date</Label>
-            <Input id="end" type="datetime-local" v-model="form.ends_at" />
+            <Label>End date</Label>
+            <DateTimePicker v-model="form.ends_at" />
             <p v-if="errors.ends_at" class="text-sm text-red-600 mt-1">{{ errors.ends_at }}</p>
           </div>
         </div>
@@ -254,10 +267,6 @@ watchDebounced(address, async (address: string) => {
         <div class="z-0">
           <MapPicker v-model="form.event_latlng"/>
           <p v-if="errors.event_latlng" class="text-sm text-red-600 mt-1">{{ errors.event_latlng }}</p>
-        </div>
-
-        <div>
-          <p> Address LatLng {{ form.latlng }} Event LatLng{{ form.event_latlng }}</p>
         </div>
       </CardContent>
 
