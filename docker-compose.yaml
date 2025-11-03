@@ -1,0 +1,70 @@
+services:
+  app:
+    build:
+      context: ./backend
+    container_name: laravel_app
+    restart: unless-stopped
+    env_file: ./backend/.env
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      - mysql
+    networks:
+      - event-mapper
+
+  node:
+    build:
+      context: ./frontend
+    container_name: vue_frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173" # Vite dev server
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    command: ["npm", "run", "dev"]
+    networks:
+      - event-mapper
+
+  www:
+    build:
+      context: ./nginx
+    container_name: nginx_web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+      - node
+    networks:
+      - event-mapper
+
+  mysql:
+    image: mysql:8
+    container_name: mysql_db
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - event-mapper
+
+volumes:
+  db_data:
+
+networks:
+  event-mapper:
+    driver: bridge

@@ -1,0 +1,49 @@
+@import 'leaflet/dist/leaflet.css';
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+    --neon-green: '#39FF14';
+    --neon-pink: '#FF00FF';
+    --neon-cyan: '#00FFFF';
+    @keyframes pulse-neon {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 0.9;
+        }
+        50% {
+            transform: scale(1.25);
+            opacity: 1;
+        }
+    }
+
+    --animate-pulse-neon: pulse-neon 0.8s ease-in-out infinite;
+}
+
+@utility bg-neon-pink {
+    background-color: #ff00ff;
+}
+
+@utility shadow-neon-pink {
+    box-shadow: 0 0 8px #ff00ff, 0 0 16px #ff00ff, 0 0 24px #ff00ff;
+}
+
+@utility map-dark {
+    filter: brightness(0.7) contrast(1.25) saturate(1.1);
+}
+
+@layer base {
+    html {
+        @apply bg-zinc-950 text-zinc-100;
+    }
+
+    body {
+        @apply bg-zinc-950 text-zinc-100;
+    }
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+}
+

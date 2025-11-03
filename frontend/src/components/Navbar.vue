@@ -1,0 +1,77 @@
+<script setup lang="ts">
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu"
+import { Button } from "@/components/ui/button"
+import { RouterLink, useRoute } from "vue-router"
+import { useAuthStore } from "@/stores/auth"
+import {router} from "@/router";
+
+const route = useRoute()
+
+const links = [
+  { to: "/", label: "Home", auth: false },
+  { to: "/events", label: "Events", auth: false },
+  { to: "/events/create", label: "Create an Event", auth: true },
+]
+const authStore = useAuthStore()
+
+const shouldShow = (isAuth: boolean): boolean => {
+  return !(isAuth && !authStore.isAuthenticated);
+
+
+}
+
+const logout = async () => {
+  const response = await authStore.logout()
+
+  if (response.status === 200) {
+    await router.replace({name: 'home'})
+  }
+}
+</script>
+
+<template>
+  <header class="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-md sticky top-0 z-50 h-[5vh] flex items-center">
+    <div class="flex items-center justify-between p-4 w-full">
+      <RouterLink to="/" class="font-bold text-xl text-neon-cyan hover:text-neon-green transition-colors">
+        Event Mapper
+      </RouterLink>
+
+      <NavigationMenu>
+        <NavigationMenuList class="hidden md:flex space-x-6">
+          <NavigationMenuItem
+              v-for="link in links"
+              :key="link.to"
+          >
+            <RouterLink
+                :to="link.to"
+                v-if="shouldShow(link.auth)"
+            >
+              <NavigationMenuLink
+                  :class="[
+                  'px-3 py-2 rounded-md font-medium transition-colors',
+                  route.path === link.to
+                    ? 'bg-neon-cyan/20 text-neon-cyan'
+                    : 'text-zinc-300 hover:text-neon-pink hover:bg-zinc-800'
+                ]"
+              >
+                {{ link.label }}
+              </NavigationMenuLink>
+            </RouterLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+
+      <Button v-if="!authStore.isAuthenticated" as-child variant="ghost" class="border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10">
+        <RouterLink to="/login">Login</RouterLink>
+      </Button>
+      <Button @click="logout" v-else as-child variant="ghost" class="border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10">
+        <p>Logout</p>
+      </Button>
+    </div>
+  </header>
+</template>
