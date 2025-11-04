@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue'
-import L, {Map as LMap, Marker} from 'leaflet'
+import L, {latLng, Map as LMap, Marker} from 'leaflet'
 
 type LatLng = { lat: number; lng: number }
 
@@ -59,6 +59,7 @@ const currentValue = computed<LatLng | null>({
 
 function placeMarker(pos: LatLng) {
   if (!map.value) return
+  stopAnimations()
   if (!marker) {
     marker = L.marker([pos.lat, pos.lng], { draggable: !props.readonly }).addTo(map.value as LMap)
     if (!props.readonly) {
@@ -73,7 +74,8 @@ function placeMarker(pos: LatLng) {
 }
 
 function moveMapTo(pos: LatLng, zoom?: number) {
-  if (!map.value) return
+  if (!map.value || !pos) return
+  stopAnimations()
   map.value.setView([pos.lat, pos.lng], zoom ?? map.value.getZoom(), { animate: true })
 }
 
@@ -98,6 +100,9 @@ function useMyLocation() {
       { enableHighAccuracy: true, timeout: 8000 }
   )
 }
+const stopAnimations = ():void => {
+  (map.value as any)?.stop?.()
+}
 
 onMounted(() => {
   const start = props.modelValue ?? props.center
@@ -110,6 +115,7 @@ onMounted(() => {
     boxZoom: !props.readonly,
     keyboard: !props.readonly,
     tap: !props.readonly as any,
+    markerZoomAnimation: false,
   }).setView([start.lat, start.lng], props.zoom)
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -138,6 +144,8 @@ onBeforeUnmount(() => {
 // Keep marker in sync if v-model changes from outside
 watch(() => props.modelValue, (v) => {
   if (!map.value) return
+
+  stopAnimations()
 
   if (!v) {
     // Remove marker and reset view to default center/zoom

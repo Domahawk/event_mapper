@@ -25,7 +25,8 @@ export interface CreateEventDTO {
     event_lng: number,
     starts_at: string
     ends_at: string
-    address_id: number
+    address_id?: number
+    organizer_id?: number
 }
 
 export interface UpdateEventDTO extends Partial<CreateEventDTO> {}

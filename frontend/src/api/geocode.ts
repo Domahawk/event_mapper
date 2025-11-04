@@ -1,13 +1,6 @@
 import { api } from '@/api/api'
 
-export type GeoResult = {
-    id: number
-    street: string
-    house_number: string
-    address_line: string
-    lat: number
-    lng: number
-}
+
 
 export async function geocode(address: string): Promise<GeoResult[]> {
     const { data } = await api.get('/geocode', {
