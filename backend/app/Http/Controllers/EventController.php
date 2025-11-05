@@ -28,12 +28,6 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        // get current user -> he is organizer
-        // check if address exists
-        // if no address id in the request, must create a new address
-        // create event
-        // return event
-
         $addressId = $request->input('address_id');
 
         if (!$addressId) {
@@ -49,11 +43,10 @@ class EventController extends Controller
             $addressId = $address->id;
         }
 
-        $user = Auth::user();
         $event = Event::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'user_id' => $user->id,
+            'user_id' => Auth::user()->id,
             'address_id' => $addressId,
             'lat' => $request->input('event_lat'),
             'lng' => $request->input('event_lng'),

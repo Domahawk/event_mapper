@@ -3,6 +3,7 @@
 use App\Http\Controllers\GeocodeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,10 +15,10 @@ Route::middleware('web')->group(function () {
 });
 
 Route::get('/events', [EventController::class, 'index']);
+Route::get('/events/{event}', [EventController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/events', [EventController::class, 'store']);
-    Route::get('/events/{event}', [EventController::class, 'show']);
+    Route::post('/events', [EventController::class, 'store'])->can('create', Event::class);
     Route::get('/user', fn (Request $request) => $request->user());
 });
 

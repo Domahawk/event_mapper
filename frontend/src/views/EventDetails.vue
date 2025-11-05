@@ -22,8 +22,7 @@ const eventData = ref<Event | null>(null)
 
 const isOwnerOrAdmin = computed(() => {
   if (!eventData.value || !auth.user) return false
-  const isAdmin = (auth.user as any)?.is_admin === true
-  return isAdmin || eventData.value.organizer?.id === auth.user.id
+  return auth.isAdmin || eventData.value.organizer?.id === auth.user.id
 })
 
 const mapPoint = computed(() => {

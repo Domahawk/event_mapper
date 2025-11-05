@@ -9,6 +9,7 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null)
     const isAuthenticated = computed(() => !!user.value)
     const STORAGE_KEY: string = 'user_data'
+    const isAdmin = computed(() => user.value?.role === 'admin')
 
     // 1) Restore from localStorage on store creation
     try {
@@ -32,16 +33,6 @@ export const useAuthStore = defineStore('auth', () => {
         { deep: true } // capture changes inside the object too
     )
 
-
-    async function getUser(): Promise<void> {
-        try {
-            const { data } = await api.get('/user')
-            user.value = data
-        } catch {
-            user.value = null
-        }
-    }
-
     async function login(payload: { email: string; password: string }): Promise<void> {
         await fetchCsrf()
         const { data } = await api.post('/login', payload)
@@ -62,8 +53,8 @@ export const useAuthStore = defineStore('auth', () => {
     return {
         user,
         isAuthenticated,
-        getUser,
         login,
         logout,
+        isAdmin,
     }
 })
