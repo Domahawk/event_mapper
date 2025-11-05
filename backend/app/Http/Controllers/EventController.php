@@ -69,7 +69,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        //
+        return ['data' => $event->load(['organizer', 'address'])];
     }
 
     /**

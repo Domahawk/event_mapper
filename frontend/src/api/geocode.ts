@@ -1,5 +1,5 @@
 import { api } from '@/api/api'
-
+import type {GeoResult} from "@/types/common.ts";
 
 
 export async function geocode(address: string): Promise<GeoResult[]> {

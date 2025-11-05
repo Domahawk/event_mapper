@@ -8,6 +8,11 @@ export const eventsApi = {
         return data
     },
 
+    async get(eventId: number): Promise<Event> {
+        const { data } = await api.get(`/events/${eventId}`)
+        return data.data
+    },
+
     async create(event: CreateEventDTO): Promise<Event> {
         const { data } = await api.post('/events', event)
         return data.data

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue'
-import L, {latLng, Map as LMap, Marker} from 'leaflet'
+import L, {Map as LMap, Marker} from 'leaflet'
 
 type LatLng = { lat: number; lng: number }
 
@@ -117,6 +117,8 @@ onMounted(() => {
     tap: !props.readonly as any,
     markerZoomAnimation: false,
   }).setView([start.lat, start.lng], props.zoom)
+
+  console.log(props.zoom)
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors',
