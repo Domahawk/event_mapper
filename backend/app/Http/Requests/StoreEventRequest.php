@@ -29,7 +29,7 @@ class StoreEventRequest extends FormRequest
             'lng' => ['required','numeric','between:-180,180'],
             'starts_at' => ['required','date'],
             'ends_at' => ['required','date'],
-            'street' => ['required','string','max:255'],
+            'street' => ['nullable','string','max:255'],
             'house_number' => ['nullable','string','max:255'],
             'address_line' => ['required','string','max:255'],
             'event_lat' => ['required','numeric','between:-90,90'],

@@ -1,18 +1,16 @@
 import {reactive, type Ref, ref} from 'vue'
-import { useToastStore } from '@/stores/toast'
 import { useAuthStore } from '@/stores/auth'
-import { eventsApi } from '@/api/events'
-import type { CreateEventDTO } from '@/types/event'
+import type { EventDTO } from '@/types/event'
 import {geocode, reverseGeocode} from "@/api/geocode.ts";
-import type {GeoResult} from "@/types/common.ts";
-import {router} from "@/router";
+import type {GeoResult, EventForm} from "@/types/common.ts";
+import dayjs from "dayjs";
 
-export function useEventForm(initial?: Partial<CreateEventDTO>) {
-    const toast = useToastStore()
+export function useEventForm(initial?: Partial<EventDTO>) {
     const auth = useAuthStore()
     const pickedThroughMap: Ref<boolean> = ref(false)
+    const addressId: Ref<number | undefined> = ref()
 
-    const form = reactive({
+    const form: EventForm = reactive({
         title: initial?.title ?? '',
         description: initial?.description ?? '',
         starts_at: initial?.starts_at ?? '',
@@ -20,11 +18,11 @@ export function useEventForm(initial?: Partial<CreateEventDTO>) {
         street: initial?.street ?? '',
         house_number: initial?.house_number ?? '',
         address_line: initial?.address_line ?? '',
-        latlng: !initial?.lat || !initial?.lng ? null : {
+        latlng: !initial?.lat || !initial.lng ? null : {
             lat: initial.lat,
             lng: initial.lng
         },
-        event_latlng: !initial?.event_lat || !initial?.event_lng ? null : {
+        event_latlng: !initial?.event_lat || !initial.event_lng ? null : {
             lat: initial.event_lat,
             lng: initial.event_lng
         },
@@ -69,25 +67,29 @@ export function useEventForm(initial?: Partial<CreateEventDTO>) {
         if (!form.starts_at) errors.starts_at = 'Start date is mandatory.'
         if (!form.ends_at) errors.ends_at = 'End date is mandatory.'
         if (!form.latlng) errors.latlng = 'Map location required.'
-        if (!form.street.trim()) errors.street = 'Street is mandatory.'
+        // if (!form.street.trim()) errors.street = 'Street is mandatory.'
         return !Object.values(errors).some(Boolean)
     }
 
-    const submit = async (): Promise<any> => {
+    const serializeData = (): EventDTO | undefined => {
         if (!validate() || !auth.user) return
-        const payload: CreateEventDTO = {
-            ...form,
+
+        return {
+            title: form?.title ?? '',
+            description: form?.description ?? '',
+            starts_at: dayjs(form.starts_at).format('YYYY-MM-DD HH:mm:ss') ?? '',
+            ends_at: dayjs(form.ends_at).format('YYYY-MM-DD HH:mm:ss') ?? '',
+            street: form.street ?? '',
+            house_number: form.house_number ?? '',
+            address_line: form.address_line ?? '',
             lat:form.latlng?.lat as number,
             lng: form.latlng?.lng as number,
             event_lat: form.event_latlng?.lat as number,
             event_lng: form.event_latlng?.lng as number,
-            organizer_id: auth.user.id
+            organizer_id: auth.user.id,
+            address_id: addressId.value ?? undefined
         }
-        const event = await eventsApi.create(payload)
-        toast.showToast({ title: 'Event saved', description: 'Successfully created event.' })
-        await router.replace({name: 'eventDetails', params: {id: event.id}})
-        return event
     }
 
-    return { form, errors, results, showResults, geoLoading, pickedThroughMap, search, reverse, validate, submit }
+    return { form, errors, results, showResults, geoLoading, pickedThroughMap, addressId, search, reverse, validate, serializeData }
 }

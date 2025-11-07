@@ -1,6 +1,6 @@
 // src/api/events.ts
 import { api } from './api'
-import type {CreateEventDTO, Event} from "@/types/event.ts";
+import type {EventDTO, Event} from "@/types/event.ts";
 
 export const eventsApi = {
     async all() {
@@ -13,7 +13,7 @@ export const eventsApi = {
         return data.data
     },
 
-    async create(event: CreateEventDTO): Promise<Event> {
+    async create(event: EventDTO): Promise<Event> {
         const { data } = await api.post('/events', event)
         return data.data
     },

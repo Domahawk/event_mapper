@@ -13,7 +13,7 @@ export interface Event {
     lng: number,
 }
 
-export interface CreateEventDTO {
+export interface EventDTO {
     title: string
     description: string
     street: string
@@ -29,4 +29,3 @@ export interface CreateEventDTO {
     organizer_id?: number
 }
 
-export interface UpdateEventDTO extends Partial<CreateEventDTO> {}

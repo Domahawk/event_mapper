@@ -1,12 +1,13 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory, type RouteRecordRaw} from 'vue-router'
 import Home from "@/views/Home.vue";
 import EventList from "@/views/EventList.vue";
 import EventDetails from "@/views/EventDetails.vue";
 import Login from "@/views/Login.vue";
 import {useAuthStore} from "@/stores/auth.ts";
 import EventCreate from "@/views/EventCreate.vue";
+import EventEdit from "@/views/EventEdit.vue";
 
-const routes = [
+const routes: RouteRecordRaw[] = [
     {
         path: '/',
         name: 'home',
@@ -31,6 +32,14 @@ const routes = [
         component: EventDetails,
         meta: {
             requiresAuth: false
+        }
+    },
+    {
+        path: '/events/edit/:id',
+        name: 'eventEdit',
+        component: EventEdit,
+        meta: {
+            requiresAuth: true
         }
     },
     {

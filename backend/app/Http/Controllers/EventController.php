@@ -70,7 +70,23 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
-        //
+        $data = $request->validated();
+
+        if ($data['address_id'] ?? null !== $event->address_id && $event->address->exists()) {
+            $address = Address::firstOrCreate([
+                'street' => $data['street'],
+                'house_number' => $data['house_number'],
+                'address_line' => $data['address_line'],
+                'lat' => $data['lat'],
+                'lng' => $data['lng'],
+                'city_id' => $data['city_id'] ?? null,
+            ]);
+
+            $data['address_id'] = $address->id;
+        }
+
+        $event->update($data);
+        return response()->json(['data' => $event->load(['organizer', 'address'])]);
     }
 
     /**
@@ -80,4 +96,20 @@ class EventController extends Controller
     {
         //
     }
+
+    private function addresses(array $data, Event $event): Address
+    {
+        $addressId = $data['address_id'] ?? null;
+
+        if ($addressId === $event->address_id ) return $event->address;
+
+        return Address::firstOrCreate([
+            'street' => $data('street'),
+            'house_number' => $data('house_number'),
+            'address_line' => $data('address_line'),
+            'lat' => $data('lat'),
+            'lng' => $data('lng'),
+            'city_id' => $data('city_id'),
+        ]);
+        }
 }

@@ -106,6 +106,7 @@ const stopAnimations = ():void => {
 
 onMounted(() => {
   const start = props.modelValue ?? props.center
+
   map.value = L.map(mapEl.value as HTMLDivElement, {
     zoomControl: true,
     attributionControl: true,
@@ -117,8 +118,6 @@ onMounted(() => {
     tap: !props.readonly as any,
     markerZoomAnimation: false,
   }).setView([start.lat, start.lng], props.zoom)
-
-  console.log(props.zoom)
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors',
@@ -150,11 +149,11 @@ watch(() => props.modelValue, (v) => {
   stopAnimations()
 
   if (!v) {
-    // Remove marker and reset view to default center/zoom
     if (marker) {
       marker.remove()
       marker = null
     }
+
     moveMapTo(props.center, props.zoom)  // reset
     return
   }

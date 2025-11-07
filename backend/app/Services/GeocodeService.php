@@ -186,7 +186,7 @@ class GeocodeService
     private function serializeNormatimResponse(array $address): array
     {
         return [
-            'street' => $address['address']['road'],
+            'street' => $address['address']['road'] ?? null,
             'house_number' => $address['address']['house_number'] ?? null,
             'address_line' => $address['display_name'],
             'lat' => $address['lat'],
