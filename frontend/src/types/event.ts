@@ -27,5 +27,7 @@ export interface EventDTO {
     ends_at: string
     address_id?: number
     organizer_id?: number
+    city_id?: number | null
+    address?: Address
 }
 

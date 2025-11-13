@@ -27,15 +27,20 @@ const setEventValues = (ev: Event): void => {
     lng: ev.address?.lng,
     event_lat: (ev as any).event_lat ?? ev.lat,
     event_lng: (ev as any).event_lng ?? ev.lng,
+    address: ev.address
   }
 }
 
 const handleSubmit = async (payload: EventDTO): Promise<void> => {
   const id = Number(route.params.id)
-  const ev: Event = await  eventsApi.update(id, payload)
+  const ev: Event = await eventsApi.update(id, payload)
   toast.showToast({ title: 'Event updated', description: 'Changes saved.' })
 
   await router.replace({name: 'eventDetails', params: {id: ev.id}})
+}
+
+const handleCancel = async () => {
+  await router.replace({name: 'eventDetails', params: {id: route.params.id}})
 }
 
 onMounted(async () => {
@@ -49,7 +54,14 @@ onMounted(async () => {
   <div class="mx-auto max-w-3xl p-4">
     <Card>
       <CardHeader><CardTitle>Edit Event</CardTitle></CardHeader>
-      <EventForm v-if="initial" :initial="initial" :loading="loading" submit-label="Save changes" @submit="handleSubmit" />
+      <EventForm
+          v-if="initial"
+          :initial="initial"
+          :loading="loading"
+          submit-label="Save changes"
+          @submit="handleSubmit"
+          @cancel="handleCancel"
+      />
     </Card>
   </div>
 </template>

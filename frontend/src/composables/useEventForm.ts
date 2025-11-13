@@ -5,7 +5,7 @@ import {geocode, reverseGeocode} from "@/api/geocode.ts";
 import type {GeoResult, EventForm} from "@/types/common.ts";
 import dayjs from "dayjs";
 
-export function useEventForm(initial?: Partial<EventDTO>) {
+export function useEventForm(initial?: EventDTO) {
     const auth = useAuthStore()
     const pickedThroughMap: Ref<boolean> = ref(false)
     const addressId: Ref<number | undefined> = ref()
@@ -18,6 +18,7 @@ export function useEventForm(initial?: Partial<EventDTO>) {
         street: initial?.street ?? '',
         house_number: initial?.house_number ?? '',
         address_line: initial?.address_line ?? '',
+        city_id: initial?.address?.city_id,
         latlng: !initial?.lat || !initial.lng ? null : {
             lat: initial.lat,
             lng: initial.lng
@@ -42,6 +43,7 @@ export function useEventForm(initial?: Partial<EventDTO>) {
             form.street = ''
             form.house_number = ''
             form.address_line = ''
+            form.city_id = null
             form.latlng = null
             form.event_latlng = null
             pickedThroughMap.value = false
@@ -67,7 +69,6 @@ export function useEventForm(initial?: Partial<EventDTO>) {
         if (!form.starts_at) errors.starts_at = 'Start date is mandatory.'
         if (!form.ends_at) errors.ends_at = 'End date is mandatory.'
         if (!form.latlng) errors.latlng = 'Map location required.'
-        // if (!form.street.trim()) errors.street = 'Street is mandatory.'
         return !Object.values(errors).some(Boolean)
     }
 
@@ -87,7 +88,8 @@ export function useEventForm(initial?: Partial<EventDTO>) {
             event_lat: form.event_latlng?.lat as number,
             event_lng: form.event_latlng?.lng as number,
             organizer_id: auth.user.id,
-            address_id: addressId.value ?? undefined
+            address_id: addressId.value ?? undefined,
+            city_id: form.city_id
         }
     }
 

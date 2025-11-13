@@ -35,6 +35,7 @@ class UpdateEventRequest extends FormRequest
             'event_lat' => ['required','numeric','between:-90,90'],
             'event_lng' => ['required','numeric','between:-180,180'],
             'address_id' => ['nullable','exists:addresses,id'],
+            'city_id' => ['nullable','exists:cities,id'],
         ];
     }
 }

@@ -8,8 +8,6 @@ use App\Models\Address;
 use App\Models\Event;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use PHPUnit\Event\EventCollection;
 use Throwable;
 
 class EventController extends Controller

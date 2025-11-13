@@ -64,37 +64,6 @@ class GeocodeService
         return $nearby->min('distance');
     }
 
-    private function storeAddresses(Collection $candidates): Collection
-    {
-        if ($candidates->isEmpty()) {
-            return collect();
-        }
-
-        $saved = collect();
-
-        foreach ($candidates as $cand) {
-            $cityName = trim((string) ($cand['city_name'] ?? ''));
-
-            $cityId = null;
-            if ($cityName !== '') {
-                $cityId = City::query()
-                    ->whereRaw('LOWER(name) = ?', [Str::lower($cityName)])
-                    ->value('id');
-            }
-
-            $address = Address::firstOrCreate(
-                $this->serializeAddress($cand),
-                [
-                    'city_id' => $cityId ?? null,
-                ]
-            );
-
-            $saved->push($address);
-        }
-
-        return $saved;
-    }
-
     /**
      * @throws ConnectionException
      */
@@ -152,45 +121,36 @@ class GeocodeService
         return $this->serializeNormatimResponse($resp->json());
     }
 
-    public function serializeAddress(Address | array $address): array
+    public function serializeAddress(Address $address): array
     {
-        if ($address instanceof Address) {
-            return [
-                'id' => $address->id,
-                'street' => $address->street,
-                'house_number' => $address->house_number,
-                'address_line' => $address->address_line,
-                'lat' => (float) $address->lat,
-                'lng' => (float) $address->lng,
-            ];
-        }
-
-        $cityName = trim((string) ($address['city_name'] ?? ''));
-
-        $cityId = null;
-        if ($cityName !== '') {
-            $cityId = City::query()
-                ->whereRaw('LOWER(name) = ?', [Str::lower($cityName)])
-                ->value('id');
-        }
-
         return [
-            'street' => $address['street'],
-            'house_number' => $address['number'],
-            'address_line' => $address['address_line'],
-            'lat' => $address['lat'],
-            'lng' => $address['lng'],
+            'id' => $address->id,
+            'street' => $address->street,
+            'house_number' => $address->house_number,
+            'address_line' => $address->address_line,
+            'lat' => (float) $address->lat,
+            'lng' => (float) $address->lng,
+            'city_id' => $address->city_id,
         ];
     }
 
     private function serializeNormatimResponse(array $address): array
     {
+        $cityName = $address['address']['city'] ?? null;
+        $city = null;
+
+        if ($cityName !== null) {
+            $city = City::query()->where('name', 'like', "%{$cityName}%")->get()->first();
+        }
+
+
         return [
             'street' => $address['address']['road'] ?? null,
             'house_number' => $address['address']['house_number'] ?? null,
             'address_line' => $address['display_name'],
             'lat' => $address['lat'],
             'lng' => $address['lon'],
+            'city_id' => $city->id ?? null,
         ];
     }
 }

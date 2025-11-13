@@ -1,3 +1,5 @@
+import type {City} from "@/types/city.ts";
+
 export interface Address {
     id: number
     city_id: number | null
@@ -6,4 +8,5 @@ export interface Address {
     house_number: string
     lat: number
     lng: number
+    city?: City
 }

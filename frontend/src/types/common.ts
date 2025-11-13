@@ -8,6 +8,7 @@ export interface GeoResult {
     street: string
     house_number: string
     address_line: string
+    city_id: number
     lat: number
     lng: number
 }
@@ -20,6 +21,7 @@ export interface EventForm {
     street: string
     house_number: string
     address_line: string
+    city_id: number | null | undefined
     latlng: LatLng | null
     event_latlng: LatLng | null
 }

@@ -19,6 +19,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'submit', payload: EventDTO): void
+  (e: 'cancel'): void
 }>()
 
 const {
@@ -36,6 +37,7 @@ function pickSuggestion(r: GeoResult) {
   addressId.value = r.id
   form.street = r.street
   form.house_number = r.house_number ?? ''
+  form.city_id = r.city_id
   form.address_line = r.address_line
   form.latlng = { lat: r.lat, lng: r.lng }
   if (!form.event_latlng) form.event_latlng = form.latlng
@@ -49,12 +51,12 @@ function pickSuggestionMap(r: GeoResult) {
   form.street = r.street
   form.house_number = r.house_number ?? ''
   form.address_line = r.address_line
+  form.city_id = r.city_id
   form.latlng = { lat: r.lat, lng: r.lng }
   address.value = `${form.street} ${form.house_number}`.trim()
   results.value = []
 }
 
-// reverse-geocode when moving event pin (only if user didn't type address)
 watch(
     () => form.event_latlng,
     async (pt) => {
@@ -69,7 +71,6 @@ watch(
     }
 )
 
-// debounce address search
 watchDebounced(
     address,
     async (val) => {
@@ -153,6 +154,10 @@ async function onSubmit() {
       <div>
         <Label>Street Number</Label>
         <Input v-model="form.house_number" :disabled="true" />
+      </div>
+      <div>
+        <Label>City</Label>
+        <Input v-model="form.city_id" :disabled="true" />
       </div>
     </div>
 
