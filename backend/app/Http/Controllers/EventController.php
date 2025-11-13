@@ -96,20 +96,4 @@ class EventController extends Controller
     {
         //
     }
-
-    private function addresses(array $data, Event $event): Address
-    {
-        $addressId = $data['address_id'] ?? null;
-
-        if ($addressId === $event->address_id ) return $event->address;
-
-        return Address::firstOrCreate([
-            'street' => $data('street'),
-            'house_number' => $data('house_number'),
-            'address_line' => $data('address_line'),
-            'lat' => $data('lat'),
-            'lng' => $data('lng'),
-            'city_id' => $data('city_id'),
-        ]);
-        }
 }

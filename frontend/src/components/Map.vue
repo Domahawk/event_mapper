@@ -44,8 +44,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="relative flex justify-center items-center w-full">
-    <div id="map" class="h-[90vh] w-[90vw] rounded-lg overflow-hidden shadow-lg border border-zinc-800 map-dark"></div>
+  <div class="w-full h-full">
+    <div id="map" class="h-[95vh] w-full rounded-lg overflow-hidden shadow-lg border border-zinc-800 map-dark"></div>
     <div class="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#ff00ff11] via-[#ff00ff0d] to-[#ffffff0a] mix-blend-screen"></div>
   </div>
 
