@@ -6,6 +6,7 @@ use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Address;
 use App\Models\Event;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
@@ -15,9 +16,29 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Collection
+    public function index(Request $request): Collection
     {
-        return Event::with(['organizer', 'address.city'])->latest()->get();
+        $query = Event::query()->with(['address.city', 'organizer']);
+
+        if ($q = $request->string('q')->toString()) {
+            $query->where(fn($q2) => $q2
+                ->where('title', 'like', "%$q%")
+                ->orWhere('description', 'like', "%$q%"));
+        }
+        if ($city = $request->string('city')->toString()) {
+            $query->whereHas('address.city', fn($q2) => $q2->where('name', 'like', "%$city%"));
+        }
+        if ($s = $request->date('starts_at')) {
+            $query->where('starts_at', '>=', $s);
+        }
+        if ($e = $request->date('ends_at')) {
+            $query->where('ends_at', '<=', $e);
+        }
+        if ($request->boolean('mine') && $user = $request->user()) {
+            $query->where('user_id', $user->id);
+        }
+
+        return $query->get();
     }
 
     /**

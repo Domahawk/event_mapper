@@ -2,7 +2,6 @@
 import { onMounted, ref, computed } from 'vue'
 import * as L from 'leaflet'
 import dayjs from 'dayjs'
-import { eventsApi } from '@/api/events'
 import type { Event } from '@/types/event'
 import EventMarkerLayer from '@/components/EventMarkerLayer.vue'
 import { useRouter } from 'vue-router'
@@ -11,10 +10,14 @@ import { Button } from '@/components/ui/button'
 import {Calendar, MapPin} from "lucide-vue-next";
 
 const mapRef = ref<L.Map>()
-const events = ref<Event[]>([])
 const selected = ref<Event | null>(null)
 const open = ref(false)
 const router = useRouter()
+const props = withDefaults(defineProps<{
+  events: Event[],
+}>(), {
+  events: () => [] as Event[],
+})
 
 function onSelect(ev: Event) {
   selected.value = ev
@@ -38,19 +41,16 @@ onMounted(async () => {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors',
   }).addTo(mapRef.value)
-
-  events.value = await eventsApi.all()
 })
 </script>
 
 <template>
   <div class="w-full h-full">
-    <div id="map" class="h-[95vh] w-full rounded-lg overflow-hidden shadow-lg border border-zinc-800 map-dark"></div>
-    <div class="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#ff00ff11] via-[#ff00ff0d] to-[#ffffff0a] mix-blend-screen"></div>
+    <div id="map" class="h-[95vh] w-full overflow-hidden shadow-lg border border-zinc-800 map-dark"></div>
   </div>
 
   <!-- Marker layer -->
-  <EventMarkerLayer :map="mapRef as L.Map" :events="events" @select="onSelect" />
+  <EventMarkerLayer :map="mapRef as L.Map" :events="props.events" @select="onSelect" />
 
   <!-- Modal -->
   <Dialog v-model:open="open">

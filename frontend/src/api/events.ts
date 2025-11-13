@@ -1,10 +1,11 @@
 // src/api/events.ts
 import { api } from './api'
 import type {EventDTO, Event} from "@/types/event.ts";
+import type {EventFilters} from "@/types/filters.ts";
 
 export const eventsApi = {
-    async all() {
-        const { data } = await api.get<Event[]>('/events')
+    async all(params?: EventFilters) {
+        const { data } = await api.get<Event[]>('/events', { params })
         return data
     },
 
