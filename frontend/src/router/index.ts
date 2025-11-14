@@ -6,6 +6,9 @@ import Login from "@/views/Login.vue";
 import {useAuthStore} from "@/stores/auth.ts";
 import EventCreate from "@/views/EventCreate.vue";
 import EventEdit from "@/views/EventEdit.vue";
+import AdminLayout from "@/layouts/AdminLayout.vue";
+import UserList from "@/views/UserList.vue";
+import UserCreateEdit from "@/views/UserCreateEdit.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -50,6 +53,34 @@ const routes: RouteRecordRaw[] = [
             requiresAuth: false
         }
     },
+    {
+        path: '/admin',
+        component: AdminLayout,
+        redirect: {
+            name: 'adminUsers'
+        },
+        meta: {
+            requiresAuth: true,
+            requiresAdmin: true,
+        },
+        children: [
+            {
+                path: 'users',
+                name: 'adminUsers',
+                component: UserList
+            },
+            {
+                path: 'users/create',
+                name: 'adminUsersCreate',
+                component: UserCreateEdit
+            },
+            {
+                path: 'users/:id',
+                name: 'adminUsersEdit',
+                component: UserCreateEdit
+            },
+        ]
+    },
 
 ]
 
@@ -62,6 +93,10 @@ router.beforeEach(async (to) => {
     const auth = useAuthStore()
 
     if (!auth.isAuthenticated && to.meta.requiresAuth) {
-        return {name: 'home'}
+        return { name: 'home' }
+    }
+
+    if (!auth.isAdmin && to.meta.requiresAdmin) {
+        return { name: 'home' }
     }
 })

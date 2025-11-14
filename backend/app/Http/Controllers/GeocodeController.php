@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\GeocodeService;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -14,7 +15,7 @@ class GeocodeController extends Controller
     /**
      * @throws ConnectionException
      */
-    public function geocode(Request $request)
+    public function geocode(Request $request): JsonResponse
     {
         $street = $request->query('address');
 
@@ -26,7 +27,7 @@ class GeocodeController extends Controller
     /**
      * @throws ConnectionException
      */
-    public function reverse(Request $request)
+    public function reverse(Request $request): JsonResponse
     {
         $lat = (float) $request->query('lat');
         $lng = (float) $request->query('lng');

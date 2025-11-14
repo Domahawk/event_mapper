@@ -3,8 +3,11 @@
 use App\Http\Controllers\GeocodeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\UserController;
 use App\Models\Event;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // Session create/destroy endpoints (need web stack)
@@ -20,8 +23,14 @@ Route::get('/events/{event}', [EventController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/events', [EventController::class, 'store'])->can('create', Event::class);
     Route::put('/events/{event}', [EventController::class, 'update'])->can('update', 'event');
-    Route::get('/user', fn (Request $request) => $request->user());
+
+    Route::get('/user', fn (Request $request) => Auth::user());
+    Route::get('users', [UserController::class, 'index'])->can('view-any', User::class);
+    Route::get('users/{user}', [UserController::class, 'show'])->can('view', User::class);
+    Route::put('users/{user}', [UserController::class, 'update'])->can('update', User::class);
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->can('delete', User::class);
 });
 
+Route::post('users', [UserController::class, 'store']);
 Route::get('/reverse', [GeocodeController::class, 'reverse']);
 Route::get('/geocode', [GeocodeController::class, 'geocode']);

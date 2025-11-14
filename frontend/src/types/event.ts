@@ -1,5 +1,5 @@
 import type {User} from "@/types/user.ts";
-import type {Address} from "@/types/address.ts";
+import type {Address} from "@/types/address";
 
 export interface Event {
     id: number

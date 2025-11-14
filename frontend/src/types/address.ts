@@ -1,4 +1,4 @@
-import type {City} from "@/types/city.ts";
+import type {City} from "@/types/city";
 
 export interface Address {
     id: number

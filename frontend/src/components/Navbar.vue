@@ -12,17 +12,27 @@ import {router} from "@/router";
 
 const route = useRoute()
 
-const links = [
+interface Link {
+  to: string,
+  label: string,
+  auth: boolean,
+  admin?: boolean,
+}
+
+const links: Link[] = [
   { to: "/", label: "Home", auth: false },
   { to: "/events", label: "Events", auth: false },
   { to: "/events/create", label: "Create an Event", auth: true },
+  { to: "/admin", label: "Admin", auth: true, admin: true },
 ]
 const authStore = useAuthStore()
 
-const shouldShow = (isAuth: boolean): boolean => {
-  return !(isAuth && !authStore.isAuthenticated);
+const shouldShow = (link: Link): boolean => {
+  if (link.auth && !authStore.isAuthenticated) {
+    return false
+  }
 
-
+  return !(link.admin && !authStore.isAdmin);
 }
 
 const logout = async () => {
@@ -35,7 +45,7 @@ const logout = async () => {
 </script>
 
 <template>
-  <header class="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-md sticky top-0 z-50 h-[5vh] flex items-center">
+  <header class="border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-md sticky top-0 z-50 h-fit flex items-center">
     <div class="flex items-center justify-between p-4 w-full">
       <RouterLink to="/" class="font-bold text-xl text-neon-cyan hover:text-neon-green transition-colors">
         Event Mapper
@@ -49,7 +59,7 @@ const logout = async () => {
           >
             <RouterLink
                 :to="link.to"
-                v-if="shouldShow(link.auth)"
+                v-if="shouldShow(link)"
             >
               <NavigationMenuLink
                   :class="[

@@ -37,43 +37,41 @@ async function onSubmit() {
 <template>
   <div class="min-h-[70vh] flex items-center justify-center p-4">
     <Card class="w-full max-w-md">
-      <CardHeader>
+
+      <CardHeader class="flex justify-center">
         <CardTitle>Login</CardTitle>
       </CardHeader>
 
-      <CardContent class="space-y-4">
-        <div>
-          <Label for="email">Email</Label>
-          <Input
-              id="email"
-              type="email"
-              v-model="form.email"
-              placeholder="you@example.com"
-          />
-        </div>
+      <form @submit.prevent="onSubmit">
+        <CardContent class="space-y-4">
+          <div>
+            <Label class="mb-5" for="email">Email</Label>
+            <Input
+                id="email"
+                type="email"
+                v-model="form.email"
+                placeholder="you@example.com"
+                required
+            />
+          </div>
+          <div>
+            <Label class="mb-5" for="password">Password</Label>
+            <Input
+                id="password"
+                type="password"
+                v-model="form.password"
+                placeholder="********"
+                required
+            />
+          </div>
+        </CardContent>
+        <CardFooter class="flex justify-between items-center mt-5">
+          <Button class="border-1" type="submit" :disabled="loading">
+            {{ loading ? 'Loading...' : 'Log in' }}
+          </Button>
+        </CardFooter>
+      </form>
 
-        <div>
-          <Label for="password">Password</Label>
-          <Input
-              id="password"
-              type="password"
-              v-model="form.password"
-              placeholder="********"
-          />
-        </div>
-      </CardContent>
-
-      <CardFooter class="flex justify-between items-center">
-        <Button :disabled="loading" @click="onSubmit">
-          {{ loading ? 'Loading...' : 'Log in' }}
-        </Button>
-<!--        <RouterLink-->
-<!--            :to="{ name: 'register' }"-->
-<!--            class="text-sm underline text-muted-foreground"-->
-<!--        >-->
-<!--          Nemate račun? Registrirajte se-->
-<!--        </RouterLink>-->
-      </CardFooter>
     </Card>
   </div>
 </template>
