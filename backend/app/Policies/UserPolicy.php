@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class UserPolicy
@@ -12,9 +13,8 @@ class UserPolicy
         return $user->role->isAdmin();
     }
 
-    public function view(User $userModel): bool
+    public function view(User $user, User $userModel): bool
     {
-        $user = Auth::user();
         return $user->id === $userModel->id || $user->role->isAdmin();
     }
 
@@ -23,9 +23,8 @@ class UserPolicy
         return true;
     }
 
-    public function update(User $userModel): bool
+    public function update(User $user, User $userModel): bool
     {
-        $user = Auth::user();
         return $user->id === $userModel->id || $user->role->isAdmin();
     }
 

@@ -9,6 +9,7 @@ import EventEdit from "@/views/EventEdit.vue";
 import AdminLayout from "@/layouts/AdminLayout.vue";
 import UserList from "@/views/UserList.vue";
 import UserCreateEdit from "@/views/UserCreateEdit.vue";
+import UserView from "@/views/UserView.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -52,6 +53,15 @@ const routes: RouteRecordRaw[] = [
         meta: {
             requiresAuth: false
         }
+    },
+    {
+        path: '/users/:id',
+        name: 'userView',
+        component: UserView,
+        meta: {
+            requiresAuth: true,
+        },
+        props: true,
     },
     {
         path: '/admin',

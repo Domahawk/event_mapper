@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { RouterLink, useRoute } from "vue-router"
 import { useAuthStore } from "@/stores/auth"
 import {router} from "@/router";
+import UserIcon from "@/components/UserIcon.vue";
 
 const route = useRoute()
 
@@ -41,6 +42,10 @@ const logout = async () => {
   if (response.status === 200) {
     await router.replace({name: 'home'})
   }
+}
+
+const toMe = (): void => {
+  router.replace({name: 'userView', params: {id: authStore.user?.id}})
 }
 </script>
 
@@ -79,9 +84,12 @@ const logout = async () => {
       <Button v-if="!authStore.isAuthenticated" as-child variant="ghost" class="border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10">
         <RouterLink to="/login">Login</RouterLink>
       </Button>
-      <Button @click="logout" v-else as-child variant="ghost" class="border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10">
-        <p>Logout</p>
-      </Button>
+      <div v-else class="flex justify-between items-center max-w-[500px] min-w-[7vw]">
+        <UserIcon size="xl" @click="toMe" />
+        <Button @click="logout" as-child variant="ghost" class="border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10">
+          <p>Logout</p>
+        </Button>
+      </div>
     </div>
   </header>
 </template>

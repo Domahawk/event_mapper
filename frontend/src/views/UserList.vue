@@ -95,6 +95,10 @@ async function deleteUser(u: User) {
   }
 }
 
+const toUser = async (id: number): Promise<void> => {
+  await router.replace({name: 'userView', params: { id: id }})
+}
+
 watchDebounced(
     q,
     () => load(),
@@ -113,7 +117,7 @@ onMounted(load)
       <CardTitle>Users</CardTitle>
       <div class="flex flex-wrap gap-2">
         <Input v-model="q.search" placeholder="Search name or email…" @keyup.enter="q.page = 1; load()" />
-        <select v-model="q.role" class="rounded-md border bg-background px-3 py-2 text-sm">
+        <select v-model="q.role" class="rounded-md border bg-black px-3 py-2 text-sm">
           <option value="">All roles</option>
           <option value="user">User</option>
           <option value="admin">Admin</option>
@@ -136,7 +140,7 @@ onMounted(load)
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow v-for="u in rows" :key="u.id" class="hover:bg-zinc-800/40">
+          <TableRow v-for="u in rows" :key="u.id" class="hover:bg-zinc-800/40" @click="toUser(u.id)">
             <TableCell>{{ u.name }}</TableCell>
             <TableCell class="truncate">{{ u.email }}</TableCell>
             <TableCell class="uppercase text-xs">{{ u.role }}</TableCell>

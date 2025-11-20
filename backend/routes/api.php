@@ -26,9 +26,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user', fn (Request $request) => Auth::user());
     Route::get('users', [UserController::class, 'index'])->can('view-any', User::class);
-    Route::get('users/{user}', [UserController::class, 'show'])->can('view', User::class);
-    Route::put('users/{user}', [UserController::class, 'update'])->can('update', User::class);
-    Route::delete('users/{user}', [UserController::class, 'destroy'])->can('delete', User::class);
+    Route::get('users/{user}', [UserController::class, 'show'])->can('view', 'user');
+    Route::put('users/{user}', [UserController::class, 'update'])->can('update', 'user');
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->can('delete', 'user');
 });
 
 Route::post('users', [UserController::class, 'store']);
