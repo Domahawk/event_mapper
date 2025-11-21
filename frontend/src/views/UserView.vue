@@ -39,7 +39,7 @@ async function onDelete() {
     await usersApi.remove(user.value.id)
 
     if (isSelf.value) {
-      await auth.logout()
+      auth.user = null
       toast.showToast({ title: 'Account deleted', description: 'You have been logged out.' })
       await router.replace({name: 'login'})
       return
@@ -73,29 +73,29 @@ onMounted(getUser)
       </CardHeader>
 
       <CardContent class="space-y-3">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="flex flex-col gap-3">
           <div>
-            <div class="text-xs text-muted-foreground">Name</div>
+            <div class="font-bold">Name</div>
             <div class="font-medium">{{ user.name }}</div>
           </div>
           <div>
-            <div class="text-xs text-muted-foreground">Email</div>
+            <div class="font-bold">Email</div>
             <div class="font-medium truncate">{{ user.email }}</div>
           </div>
           <div>
-            <div class="text-xs text-muted-foreground">Role</div>
+            <div class="font-bold">Role</div>
             <div class="font-medium uppercase text-xs">{{ user.role }}</div>
           </div>
           <div>
-            <div class="text-xs text-muted-foreground">Created</div>
+            <div class="font-bold">Created</div>
             <div class="font-medium">{{ new Date(user.created_at).toLocaleString() }}</div>
           </div>
         </div>
       </CardContent>
 
       <CardFooter class="flex gap-2">
-        <Button @click="onEdit">Update</Button>
-        <Button variant="destructive" :disabled="deleting" @click="onDelete">
+        <Button variant="outline" @click="onEdit">Update</Button>
+        <Button variant="outline" :disabled="deleting" @click="onDelete">
           {{ deleting ? 'Deleting...' : (isSelf ? 'Delete & Logout' : 'Delete') }}
         </Button>
       </CardFooter>

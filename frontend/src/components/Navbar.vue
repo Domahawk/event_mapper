@@ -81,9 +81,14 @@ const toMe = (): void => {
         </NavigationMenuList>
       </NavigationMenu>
 
-      <Button v-if="!authStore.isAuthenticated" as-child variant="ghost" class="border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10">
-        <RouterLink to="/login">Login</RouterLink>
-      </Button>
+      <div v-if="!authStore.isAuthenticated" class="flex justify-between items-center max-w-[500px] min-w-[10vw]">
+        <Button as-child variant="ghost" class="border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10">
+          <RouterLink to="/login">Login</RouterLink>
+        </Button>
+        <Button as-child variant="ghost" class="border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10">
+          <RouterLink to="/register">Register</RouterLink>
+        </Button>
+      </div>
       <div v-else class="flex justify-between items-center max-w-[500px] min-w-[7vw]">
         <UserIcon size="xl" @click="toMe" />
         <Button @click="logout" as-child variant="ghost" class="border border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10">

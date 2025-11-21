@@ -10,6 +10,7 @@ import AdminLayout from "@/layouts/AdminLayout.vue";
 import UserList from "@/views/UserList.vue";
 import UserCreateEdit from "@/views/UserCreateEdit.vue";
 import UserView from "@/views/UserView.vue";
+import UserRegister from "@/views/UserRegister.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -62,6 +63,14 @@ const routes: RouteRecordRaw[] = [
             requiresAuth: true,
         },
         props: true,
+    },
+    {
+        path: '/register',
+        name: 'register',
+        component: UserRegister,
+        meta: {
+            requiresAuth: false
+        },
     },
     {
         path: '/admin',

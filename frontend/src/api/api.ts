@@ -17,7 +17,6 @@ export const api = axios.create({
     xsrfHeaderName: 'X-XSRF-TOKEN',
 })
 
-// --- CSRF bootstrap + refresh ---
 let csrfReady = false
 let refreshing: Promise<void> | null = null
 

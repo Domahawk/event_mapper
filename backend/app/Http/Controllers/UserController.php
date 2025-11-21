@@ -21,8 +21,8 @@ class UserController extends Controller
 
         if ($search) {
             $query->where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%');
+                $query->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%');
             });
         }
 
@@ -69,12 +69,18 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function destroy(User $user): JsonResponse
+    public function destroy(Request $request, User $user): JsonResponse
     {
+        if (Auth::user()->id === $user->id) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
         $user->delete();
 
         return response()->json([
-            'message' => 'User user deleted'
+            'message' => 'User deleted'
         ]);
     }
 }

@@ -45,7 +45,7 @@ const onSubmit = () => {
 
       <div class="space-y-5">
         <Label for="role">Role</Label>
-        <select id="role" class="rounded-md border bg-background px-3 py-2 text-sm" v-model="form.role">
+        <select id="role" class="rounded-md border bg-black px-3 py-2 text-sm" v-model="form.role">
           <option value="user">User</option>
           <option value="admin">Admin</option>
         </select>

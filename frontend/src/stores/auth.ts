@@ -11,16 +11,13 @@ export const useAuthStore = defineStore('auth', () => {
     const STORAGE_KEY: string = 'user_data'
     const isAdmin = computed(() => user.value?.role === 'admin')
 
-    // 1) Restore from localStorage on store creation
     try {
         const raw = localStorage.getItem(STORAGE_KEY)
         if (raw) user.value = JSON.parse(raw) as User
     } catch (_) {
-        // ignore bad JSON
         localStorage.removeItem(STORAGE_KEY)
     }
 
-    // 2) Keep localStorage in sync with user state
     watch(
         user,
         (val) => {
@@ -30,7 +27,7 @@ export const useAuthStore = defineStore('auth', () => {
                 localStorage.removeItem(STORAGE_KEY)
             }
         },
-        { deep: true } // capture changes inside the object too
+        { deep: true }
     )
 
     async function login(payload: { email: string; password: string }): Promise<void> {
