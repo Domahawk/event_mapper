@@ -23,6 +23,7 @@ Route::get('/events/{event}', [EventController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/events', [EventController::class, 'store'])->can('create', Event::class);
     Route::put('/events/{event}', [EventController::class, 'update'])->can('update', 'event');
+    Route::delete('/events/{event}', [EventController::class, 'destroy'])->can('delete', 'event');
 
     Route::get('/user', fn (Request $request) => Auth::user());
     Route::get('users', [UserController::class, 'index'])->can('view-any', User::class);

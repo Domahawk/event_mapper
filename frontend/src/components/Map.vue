@@ -46,7 +46,7 @@ onMounted(async () => {
 
 <template>
   <div class="w-full h-full">
-    <div id="map" class="h-[95vh] w-full overflow-hidden shadow-lg border border-zinc-800 map-dark"></div>
+    <div id="map" class="h-[93vh] w-full overflow-hidden shadow-lg border border-zinc-800 map-dark"></div>
   </div>
 
   <!-- Marker layer -->

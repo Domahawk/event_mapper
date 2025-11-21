@@ -79,7 +79,7 @@ const deleteEvent = async ():Promise<void> => {
   if (!ok) return
 
   try {
-    // await eventsApi.delete(eventData.value.id)
+    await eventsApi.remove(eventData.value.id)
     toast.showToast({ title: 'Event deleted', description: 'The event has been removed.' })
     await router.replace({name: 'events'})
   } catch (e: any) {
